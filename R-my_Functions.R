@@ -128,3 +128,19 @@ missing_features <- function(df){
   data.frame(missingVal = sapply(lapply(df, is.na), sum)) %>% rownames_to_column("feature") %>%  arrange(desc(missingVal)) %>% filter(missingVal > 0)
   
   }
+              
+ 
+{
+temp <- loan[, which(sapply(loan, is.character))]
+lapply(seq_along(temp), plot_b, temp$loan_status, names(temp), temp)
+plot_b <- function(i, loan_status, name, df){
+  
+df = data.frame(df[, i]) 
+  
+df %>% 
+  ggplot( aes(x = df[, 1], fill = loan_status)) + 
+    geom_bar(position = "fill") +
+    coord_flip() + 
+    theme_light() + xlab(name[[i]])
+}
+}
