@@ -144,3 +144,28 @@ df %>%
     theme_light() + xlab(name[[i]])
 }
 }
+              
+#merging tables with different column names, provided a mapping table fo the column names. refer merging table excel as data source
+
+{
+  path <- "C:/Users/Rabi/Documents/merging_tables.xlsx"
+  survey_files <- path %>%
+    excel_sheets() %>%
+    set_names() %>%
+    map(read_excel, path = path)
+  
+  map_file <- survey_files["map"]
+  
+  transform_name <- function(x, source, map_file){
+    
+    temp <- map_file[[1]] %>% filter(Source == source)
+    return(temp$mapping[which(temp$Columns %in% x)])
+    
+  }
+  
+  for (i in 1:(length(survey_files)-1)){
+    colnames(survey_files[[i]]) <-
+      sapply(names(survey_files[[i]]), transform_name, names(survey_files[i]), map_file)
+  }
+}
+
