@@ -1,4 +1,4 @@
-#read excel files
+#read excel files copied from stackoverflow
 read_excel_allsheets <- function(filename, tibble = FALSE) {
   # I prefer straight data.frames
   # but if you like tidyverse tibbles (the default with read_excel)
@@ -11,7 +11,8 @@ read_excel_allsheets <- function(filename, tibble = FALSE) {
   return(x)
 }
 
-#convert to r format path
+
+#convert to r format path own
 convert_to_r_path <- function(){
   
   library(stringr)
@@ -22,6 +23,7 @@ convert_to_r_path <- function(){
   return(r_path)
 }
 
+#own
 append <- function(mydf, n) {
   orig <- mydf
   for (i in 1:n) {
@@ -30,7 +32,7 @@ append <- function(mydf, n) {
   return(mydf)
 }
 
-#imputing NA values using rpaart classification in multiple variables of data frame
+#imputing NA values using rpaart classification in multiple variables of data frame-own
 {
 x <- sample(c("aa", "bb", "cc", NA), 5000, replace = TRUE)
 y <- sample(c("mm", "nn", "pp", NA), 5000, replace = TRUE)
@@ -50,7 +52,7 @@ for(i in seq_along(colname)) {
 }
 
 
-#bar plot to explore Categorical variables with fill option
+#bar plot to explore Categorical variables with fill option-own
 {
   plotBar <- function(myDf,
                       fill,
@@ -69,7 +71,7 @@ for(i in seq_along(colname)) {
   }
 }
 
-#boxplots to explore numerical Vs Categorical variable
+#boxplots to explore numerical Vs Categorical variable-own
 {
   plotbox <- function(myDf,
                       category,
