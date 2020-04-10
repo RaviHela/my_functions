@@ -90,6 +90,7 @@ for(i in seq_along(colname)) {
   }
 }
 
+#borplots to explore  Categorical variable              
 {
   plotBar <- function(myDf,row = 3,
                       col = 3) {
@@ -107,6 +108,7 @@ for(i in seq_along(colname)) {
   }
 }
 
+#plot histigram              
 {
   plotNum <- function(myDf,row = 3,
                       col = 3) {
@@ -125,16 +127,18 @@ for(i in seq_along(colname)) {
   }
 }
 
+#missing value summary
 missing_features <- function(df){
   
   data.frame(missingVal = sapply(lapply(df, is.na), sum)) %>% rownames_to_column("feature") %>%  arrange(desc(missingVal)) %>% filter(missingVal > 0)
   
   }
               
- 
+ #plotting char or factor variable with bar along with fill option
 {
 temp <- loan[, which(sapply(loan, is.character))]
 lapply(seq_along(temp), plot_b, temp$loan_status, names(temp), temp)
+
 plot_b <- function(i, loan_status, name, df){
   
 df = data.frame(df[, i]) 
@@ -148,7 +152,6 @@ df %>%
 }
               
 #merging tables with different column names, provided a mapping table fo the column names. refer merging table excel as data source
-
 {
   path <- "C:/Users/Rabi/Documents/merging_tables.xlsx"
   survey_files <- path %>%
@@ -170,4 +173,43 @@ df %>%
       sapply(names(survey_files[[i]]), transform_name, names(survey_files[i]), map_file)
   }
 }
+ 
+              
+ #get simple corr            
+ {
+   split_arrange_names <- function(x){
+  
+  return(paste0(sort(unlist(str_split(x, "_"))), collapse = ""))
+}
+
+#get simplifeid correlation dataframe
+get_corr_df_simple <- function(df, cut_off = NA) {
+  
+  simpl_df <-
+    df %>% select_if(is.numeric) %>% correlate(use = "pairwise.complete.obs") %>%
+    pivot_longer(
+      -rowname,
+      names_to = "features",
+      values_to = "corr",
+      values_drop_na = T
+    ) %>%
+    mutate(t1 = paste(rowname, features, sep = "_")) %>%
+    mutate(t2 = sapply(t1, split_arrange_names)) %>%
+    arrange(t2) %>%
+    group_by(t2) %>%
+    mutate(rank = row_number(t2)) %>%
+    ungroup %>% filter(rank == 1) %>%
+    select(rowname, features, corr) %>%
+    arrange(desc(abs(corr))) 
+  
+  if(is.na(cut_off)){
+    return(simpl_df)
+  }else{
+    
+    return(simpl_df %>% filter(abs(corr) >= cut_off))
+  }
+  
+}
+
+   }
 
